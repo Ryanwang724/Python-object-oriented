@@ -13,6 +13,11 @@ action_list = {
     "show": PrintAll
 }
 
+result_list = {    # 依據Server回傳結果提示使用者
+    ("add","OK") : "    Add {parameter} success",
+    ("add","Fail"): "    Add {parameter} fail"
+}
+
 class SocketClient:
     def __init__(self, host, port):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
@@ -53,22 +58,23 @@ class SocketClient:
             select_result = self.print_menu()
             try:
                 para = {}                                       # clear parameters
-                if select_result == 'show':                     # show會先送指令至server，再將回傳值印出
+                if select_result == 'show':                     # show會先送指令至Server，再將回傳值印出
                     client.send_command(select_result,{})
                     keep_going = client.wait_response()
                     student_dict = self.raw_data.get('parameters',{})
                     student_dict = PrintAll(student_dict).execute()
                 else:                                           # 其餘的是做完處理後才送至Server
                     student_dict = action_list[select_result](student_dict).execute()
+
                     if bool(student_dict):                      # 確認字典是否有值
                         for key,value in student_dict.items():  # 封裝成Server接受的格式
                             para = {'name':key,'scores':value}
+
                     client.send_command(select_result, para)
                     keep_going = client.wait_response()
-                    if select_result == "add" and self.raw_data['status'] == 'OK': # 提示是否Add成功
-                        print(f"    Add {para} success")
-                    elif select_result == "add" and self.raw_data['status'] == 'Fail':
-                        print(f"    Add {para} fail")
+
+                    result_key = (select_result, self.raw_data['status'])    # 提示使用者Server執行結果
+                    print(result_list[result_key].format(parameter = para))
 
                     student_dict = self.raw_data.get('parameters',{})
             except Exception as e:
