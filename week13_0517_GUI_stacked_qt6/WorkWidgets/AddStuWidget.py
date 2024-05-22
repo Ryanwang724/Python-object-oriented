@@ -24,6 +24,7 @@ class AddStuWidget(QtWidgets.QWidget):
         self.name_editor_label.textChanged.connect(self.enable_button)
         self.subject_editor_label = LineEditComponent("Subject")
         self.subject_editor_label.mousePressEvent = lambda x: self.subject_editor_label.clear()
+        self.subject_editor_label.textChanged.connect(self.enable_button)
         self.score_editor_label = LineEditComponent("")
         self.score_editor_label.setValidator(QtGui.QIntValidator())
         self.score_editor_label.mousePressEvent = lambda x: self.score_editor_label.clear()
@@ -105,7 +106,11 @@ class AddStuWidget(QtWidgets.QWidget):
 
         if sender is self.name_editor_label:
             self.query_button.setEnabled(flag)
-        elif sender is self.score_editor_label:
+        elif sender is self.score_editor_label or sender is self.subject_editor_label:
+            if len(self.subject_editor_label.text().strip()) != 0 and len(self.score_editor_label.text().strip()) != 0:
+                flag = True
+            else:
+                flag = False
             self.add_button.setEnabled(flag)
 
     def process_result_query_button(self, result):
