@@ -11,7 +11,6 @@ class LabelComponent(QtWidgets.QLabel):
         self.setFont(QtGui.QFont("微軟正黑體", font_size))
         self.setText(content)
 
-
 class LineEditComponent(QtWidgets.QLineEdit):
     def __init__(self, default_content="", length=10, width=200, font_size=16):
         super().__init__()
@@ -21,25 +20,32 @@ class LineEditComponent(QtWidgets.QLineEdit):
         self.setMaximumWidth(width)
         self.setFont(QtGui.QFont("微軟正黑體", font_size))
 
-
 class ButtonComponent(QtWidgets.QPushButton):
     def __init__(self, text, font_size=16):
         super().__init__()
         self.setText(text)
         self.setFont(QtGui.QFont("微軟正黑體", font_size))
 
-class RadioButtonComponent(QtWidgets.QRadioButton):
-    def __init__(self, text, font_size=14):
-        super().__init__()
-        self.setText(text)
-        self.setFont(QtGui.QFont("微軟正黑體", font_size))
-        self.setFixedHeight(30)
-        self.setFixedWidth(200)
-
 class ComboBoxComponent(QtWidgets.QComboBox):
     def __init__(self, text):
         super().__init__()
         self.setPlaceholderText(text)
+        self.setCurrentIndex(-1)
         self.setFixedHeight(35)
         self.setFixedWidth(200)
+        self.setStyleSheet("font-size: 16px;")
 
+class CheckboxComponent(QtWidgets.QCheckBox):
+    def __init__(self):
+        super().__init()
+        self.setCheckable(False)
+        self.setChecked(False)
+
+class TextBrowserComponent(QtWidgets.QTextBrowser):
+    def __init__(self):
+        super().__init__()
+        self.setFont(QtGui.QFont("Arial", 18))
+        self.setStyleSheet("""
+                           background-color: transparent;
+                           border: 1px solid black;
+                           """)

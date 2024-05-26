@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
-from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent
+from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent, TextBrowserComponent
 from SocketClient.ServiceController import ExecuteCommand
 import json
 
@@ -12,12 +12,7 @@ class ShowStuWidget(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout()
 
         header_label = LabelComponent(20, "Show Student")
-        self.text_browser = QtWidgets.QTextBrowser()
-        self.text_browser.setFont(QtGui.QFont("Arial", 18))
-        self.text_browser.setStyleSheet("""
-                                        background-color: transparent;
-                                        border: 1px solid black;
-                                        """)
+        self.text_browser = TextBrowserComponent()
 
         layout.addWidget(header_label, stretch=15)
         layout.addWidget(self.text_browser, stretch=85)
