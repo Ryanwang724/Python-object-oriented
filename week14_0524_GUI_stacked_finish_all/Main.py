@@ -8,5 +8,5 @@ main_window = MainWidget()
 main_window.setFixedSize(800, 400)
 main_window.show()
 # main_window.showFullScreen()
-
+app.setStyle("fusion")
 sys.exit(app.exec())

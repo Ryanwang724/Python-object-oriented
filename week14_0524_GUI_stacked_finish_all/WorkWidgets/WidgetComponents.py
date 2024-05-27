@@ -36,10 +36,19 @@ class ComboBoxComponent(QtWidgets.QComboBox):
         self.setStyleSheet("font-size: 16px;")
 
 class CheckboxComponent(QtWidgets.QCheckBox):
-    def __init__(self):
-        super().__init()
-        self.setCheckable(False)
+    def __init__(self, text):
+        super().__init__()
+        self.setFont(QtGui.QFont("Arial", 16))
+        self.setEnabled(False)
+        self.setCheckable(True)
         self.setChecked(False)
+        self.setText(text)
+        self.setStyleSheet("""
+                           QCheckBox::indicator {
+                               width: 20px;
+                               height: 20px;
+                           }
+                           """)
 
 class TextBrowserComponent(QtWidgets.QTextBrowser):
     def __init__(self):

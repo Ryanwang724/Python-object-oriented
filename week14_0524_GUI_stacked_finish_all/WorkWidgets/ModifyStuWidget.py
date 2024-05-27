@@ -92,7 +92,7 @@ class ModifyStuWidget(QtWidgets.QWidget):
             self.user_hint_label.setText("")
         else:
             self.name_combo_box.setEnabled(False)
-            self.user_hint_label.setText("No student data please go to Add.")
+            self.user_hint_label.setText("No student data, please go to Add.")
 
     def select_stu(self, value):
         if value in self.parameters.keys():

@@ -150,3 +150,4 @@ class AddStuWidget(QtWidgets.QWidget):
     def load(self):
         print('Add widget')
         self.initial_state()
+        self.user_hint_label.setText("")
