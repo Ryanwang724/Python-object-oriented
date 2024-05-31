@@ -2,17 +2,28 @@ from PyQt6 import QtWidgets, QtGui, QtCore
 from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent, TextBrowserComponent
 from SocketClient.ServiceController import ExecuteCommand
 import json
+import os
 
 
 class ShowStuWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+        self.this_file_path = os.path.dirname(os.path.abspath(__file__))
         self.setObjectName("show_stu_widget")
 
         layout = QtWidgets.QVBoxLayout()
 
         header_label = LabelComponent(20, "Show Student")
         self.text_browser = TextBrowserComponent()
+
+        # background_image_path = os.path.join(self.this_file_path, '..', 'Image', 'background', 'pink.jpg')
+
+        # if os.path.exists(background_image_path):
+        #     # 使用正確的路徑格式
+        #     background_image_path = background_image_path.replace('\\', '/')
+        #     self.setStyleSheet(f'background-image: url("{background_image_path}");')
+        # else:
+        #     print(f"Error: The background image {background_image_path} does not exist.")
 
         layout.addWidget(header_label, stretch=15)
         layout.addWidget(self.text_browser, stretch=85)

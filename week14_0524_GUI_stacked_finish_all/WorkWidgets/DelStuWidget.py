@@ -2,10 +2,12 @@ from PyQt6 import QtWidgets, QtGui, QtCore
 from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent, ComboBoxComponent, CheckboxComponent, TextBrowserComponent
 from SocketClient.ServiceController import ExecuteCommand
 import json
+import os
 
 class DelStuWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+        self.this_file_path = os.path.dirname(os.path.abspath(__file__))
         self.setObjectName("del_stu_widget")
 
         layout = QtWidgets.QGridLayout()
@@ -25,6 +27,15 @@ class DelStuWidget(QtWidgets.QWidget):
         self.confirm_check_box.stateChanged.connect(self.confirm_check_action)
         self.send_button = ButtonComponent("Send")
         self.send_button.clicked.connect(self.send_button_action)
+
+        # background_image_path = os.path.join(self.this_file_path, '..', 'Image', 'background', 'green.png')
+
+        # if os.path.exists(background_image_path):
+        #     # 使用正確的路徑格式
+        #     background_image_path = background_image_path.replace('\\', '/')
+        #     self.setStyleSheet(f'background-image: url("{background_image_path}");')
+        # else:
+        #     print(f"Error: The background image {background_image_path} does not exist.")
 
         layout.addWidget(header_label, 0, 0, 1, 2)
         layout.addWidget(name_label, 1, 0, 1, 1)
