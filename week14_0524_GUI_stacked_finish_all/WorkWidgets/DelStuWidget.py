@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
-from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent, ComboBoxComponent, CheckboxComponent, TextBrowserComponent
+from WorkWidgets.WidgetComponents import LabelComponent, ButtonComponent, ComboBoxComponent, CheckboxComponent, ScrollAreaComponent
 from SocketClient.ServiceController import ExecuteCommand
 import json
 import os
@@ -8,6 +8,8 @@ class DelStuWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.this_file_path = os.path.dirname(os.path.abspath(__file__))
+        self.background_image_path = os.path.join(self.this_file_path, '..', 'Image', 'background', 'architecture.jpg') # 設定背景圖片
+        self.background_pixmap = QtGui.QPixmap(self.background_image_path)
         self.setObjectName("del_stu_widget")
 
         layout = QtWidgets.QGridLayout()
@@ -15,7 +17,11 @@ class DelStuWidget(QtWidgets.QWidget):
         header_label = LabelComponent(20, "Delete Student")
         name_label = LabelComponent(16, "Name: ")
 
-        self.text_browser = TextBrowserComponent()
+        self.content_displayer = ScrollAreaComponent()
+        self.content_displayer.setStyleSheet("""
+                                            background-color: transparent;
+                                            border: 1px solid black;
+                                            """)
 
         self.user_hint_label = LabelComponent(16, "")
         self.user_hint_label.setStyleSheet("color: red;")
@@ -28,19 +34,10 @@ class DelStuWidget(QtWidgets.QWidget):
         self.send_button = ButtonComponent("Send")
         self.send_button.clicked.connect(self.send_button_action)
 
-        # background_image_path = os.path.join(self.this_file_path, '..', 'Image', 'background', 'green.png')
-
-        # if os.path.exists(background_image_path):
-        #     # 使用正確的路徑格式
-        #     background_image_path = background_image_path.replace('\\', '/')
-        #     self.setStyleSheet(f'background-image: url("{background_image_path}");')
-        # else:
-        #     print(f"Error: The background image {background_image_path} does not exist.")
-
         layout.addWidget(header_label, 0, 0, 1, 2)
         layout.addWidget(name_label, 1, 0, 1, 1)
         layout.addWidget(self.name_combo_box, 1, 1, 1, 2)
-        layout.addWidget(self.text_browser, 2, 0, 4, 4)
+        layout.addWidget(self.content_displayer, 2, 0, 4, 4)
 
         layout.addWidget(self.user_hint_label, 0, 4, 4, 2)
 
@@ -50,10 +47,14 @@ class DelStuWidget(QtWidgets.QWidget):
         layout.setColumnStretch(3, 1)
         layout.setColumnStretch(4, 2)
 
-        layout.setRowStretch(0, 1)
-        layout.setRowStretch(4, 2)
-
         self.setLayout(layout)
+
+        self.message_timer = QtCore.QTimer()
+        self.message_timer.timeout.connect(self.clear_user_hint)
+
+    def paintEvent(self, event):
+        painter = QtGui.QPainter(self)
+        painter.drawPixmap(self.rect(), self.background_pixmap)
 
     def initial_state(self):
         self.name_combo_box.setCurrentIndex(-1)
@@ -78,23 +79,24 @@ class DelStuWidget(QtWidgets.QWidget):
             self.name_combo_box.clear()
             self.name_combo_box.addItems(self.name_list)
             self.name_combo_box.setEnabled(True)
-            self.user_hint_label.setText("")
         else:
             self.name_combo_box.setEnabled(False)
-            self.user_hint_label.setText("No student data, please go to Add.")
+            if not self.user_hint_label.text():
+                self.user_hint_label.setText("No student data, please go to Add.")
         self.show_data(self.parameters)
 
     def show_data(self, data):
-        self.text_browser.setText("") # clear
-        self.text_browser.setText("==== student list ====")
+        text = "==== student list ====\n\n"
         for _ , info in data.items():
             for key , value in info.items():
                 if key == 'name':
-                    self.text_browser.append(f"\nName: {value}")
+                    text += f"Name: {value}"
                 elif key == 'scores':
                     for subject , score in value.items():
-                        self.text_browser.append(f"  subject: {subject}, score: {score}")
-        self.text_browser.append("\n==================")
+                        text += f"      subject: {subject}, score: {score}\n"
+                text += "\n"
+        text += "=================="
+        self.content_displayer.content.setText(text)
 
     def select_stu(self, value):
         if value in self.parameters.keys():
@@ -124,7 +126,11 @@ class DelStuWidget(QtWidgets.QWidget):
             self.user_hint_label.setText(f"Delete success")
             self.initial_state()
             self.get_stu_data()
-            self.show_data(self.parameters)
+            self.message_timer.start(3000)
+
+    def clear_user_hint(self):
+        self.user_hint_label.setText("")
+        self.message_timer.stop()
 
     def load(self):
         print('delete widget')

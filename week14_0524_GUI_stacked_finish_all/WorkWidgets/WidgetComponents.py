@@ -50,11 +50,10 @@ class CheckboxComponent(QtWidgets.QCheckBox):
                            }
                            """)
 
-class TextBrowserComponent(QtWidgets.QTextBrowser):
+class ScrollAreaComponent(QtWidgets.QScrollArea):
     def __init__(self):
         super().__init__()
-        self.setFont(QtGui.QFont("Arial", 18))
-        self.setStyleSheet("""
-                           background-color: transparent;
-                           border: 1px solid black;
-                           """)
+        self.setWidgetResizable(True)
+        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.content = LabelComponent(16, "")
+        self.setWidget(self.content)

@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6 import QtWidgets, QtGui
 from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent, ComboBoxComponent
 from SocketClient.ServiceController import ExecuteCommand
 import json
@@ -9,6 +9,8 @@ class ModifyStuWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.this_file_path = os.path.dirname(os.path.abspath(__file__))
+        self.background_image_path = os.path.join(self.this_file_path, '..', 'Image', 'background', 'view.jpg') # 設定背景圖片
+        self.background_pixmap = QtGui.QPixmap(self.background_image_path)
         self.setObjectName("modify_stu_widget")
 
         self.name_list = list()
@@ -41,15 +43,6 @@ class ModifyStuWidget(QtWidgets.QWidget):
         self.reset_button = ButtonComponent("Reset")
         self.reset_button.clicked.connect(self.reset_button_action)
 
-        # background_image_path = os.path.join(self.this_file_path, '..', 'Image', 'background', 'yellow.jpg')
-
-        # if os.path.exists(background_image_path):
-        #     # 使用正確的路徑格式
-        #     background_image_path = background_image_path.replace('\\', '/')
-        #     self.setStyleSheet(f'background-image: url("{background_image_path}");')
-        # else:
-        #     print(f"Error: The background image {background_image_path} does not exist.")
-
         layout.addWidget(header_label, 0, 0, 1, 2)
         layout.addWidget(name_label, 1, 0, 1, 1)
 
@@ -71,6 +64,10 @@ class ModifyStuWidget(QtWidgets.QWidget):
         layout.setRowStretch(4, 2)
 
         self.setLayout(layout)
+
+    def paintEvent(self, event):
+        painter = QtGui.QPainter(self)
+        painter.drawPixmap(self.rect(), self.background_pixmap)
 
     def initial_state(self):
         self.name_combo_box.setCurrentIndex(-1)
