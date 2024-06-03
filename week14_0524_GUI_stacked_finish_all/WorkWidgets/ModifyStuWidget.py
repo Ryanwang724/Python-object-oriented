@@ -101,7 +101,7 @@ class ModifyStuWidget(QtWidgets.QWidget):
         if len(self.name_list) > 0:
             self.name_combo_box.clear()
             self.name_combo_box.addItems(self.name_list)
-            self.name_combo_box.setEnabled(True and self.enable_flag)
+            self.name_combo_box.setEnabled(self.enable_flag)
         else:
             self.name_combo_box.setEnabled(False)
             if not self.user_hint_label.text():
@@ -162,11 +162,12 @@ class ModifyStuWidget(QtWidgets.QWidget):
     def clear_user_hint(self):
         self.user_hint_label.setText("")
         self.enable_flag = True
-        self.name_combo_box.setEnabled(True and self.enable_flag)
+        self.name_combo_box.setEnabled(self.enable_flag)
         self.message_timer.stop()
 
     def load(self):
         print('Modify widget')
         self.initial_state()
+        self.enable_flag = True
         self.user_hint_label.setText("")
         self.get_stu_data()
