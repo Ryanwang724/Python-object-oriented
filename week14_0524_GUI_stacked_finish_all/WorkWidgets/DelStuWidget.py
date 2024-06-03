@@ -7,6 +7,8 @@ import os
 class DelStuWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+        self.delay_time = 2000 # ms
+        self.enable_flag = True
         self.this_file_path = os.path.dirname(os.path.abspath(__file__))
         self.background_image_path = os.path.join(self.this_file_path, '..', 'Image', 'background', 'architecture.jpg') # 設定背景圖片
         self.background_pixmap = QtGui.QPixmap(self.background_image_path)
@@ -78,7 +80,7 @@ class DelStuWidget(QtWidgets.QWidget):
         if len(self.name_list) > 0:
             self.name_combo_box.clear()
             self.name_combo_box.addItems(self.name_list)
-            self.name_combo_box.setEnabled(True)
+            self.name_combo_box.setEnabled(True and self.enable_flag)
         else:
             self.name_combo_box.setEnabled(False)
             if not self.user_hint_label.text():
@@ -113,6 +115,7 @@ class DelStuWidget(QtWidgets.QWidget):
             self.send_button.setEnabled(True)
 
     def send_button_action(self):
+        self.enable_flag = False
         student_name = self.name_combo_box.currentText()
         parameters = {'name':student_name}
 
@@ -126,13 +129,17 @@ class DelStuWidget(QtWidgets.QWidget):
             self.user_hint_label.setText(f"Delete success")
             self.initial_state()
             self.get_stu_data()
-            self.message_timer.start(3000)
+            self.name_combo_box.setEnabled(False)
+            self.message_timer.start(self.delay_time)
 
     def clear_user_hint(self):
         self.user_hint_label.setText("")
+        self.enable_flag = True
+        self.name_combo_box.setEnabled(True and self.enable_flag)
         self.message_timer.stop()
 
     def load(self):
         print('delete widget')
         self.initial_state()
+        self.user_hint_label.setText("")
         self.get_stu_data()

@@ -8,6 +8,8 @@ import os
 class ModifyStuWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+        self.delay_time = 2000 # ms
+        self.enable_flag = True
         self.this_file_path = os.path.dirname(os.path.abspath(__file__))
         self.background_image_path = os.path.join(self.this_file_path, '..', 'Image', 'background', 'view.jpg') # 設定背景圖片
         self.background_pixmap = QtGui.QPixmap(self.background_image_path)
@@ -99,7 +101,7 @@ class ModifyStuWidget(QtWidgets.QWidget):
         if len(self.name_list) > 0:
             self.name_combo_box.clear()
             self.name_combo_box.addItems(self.name_list)
-            self.name_combo_box.setEnabled(True)
+            self.name_combo_box.setEnabled(True and self.enable_flag)
         else:
             self.name_combo_box.setEnabled(False)
             if not self.user_hint_label.text():
@@ -132,7 +134,7 @@ class ModifyStuWidget(QtWidgets.QWidget):
         student_name = self.name_combo_box.currentText()
         subject = self.subject_editor_label.text().strip()
         score = float(self.score_editor_label.text().strip())
-
+        self.enable_flag = False
         self.stu_score_dict = copy.deepcopy(self.parameters[student_name]['scores'])
         self.stu_score_dict[subject] = score
         parameters = {'name':student_name, 'scores_dict':self.stu_score_dict}
@@ -155,10 +157,12 @@ class ModifyStuWidget(QtWidgets.QWidget):
                 self.user_hint_label.setText('Add ' + print_str)
             self.initial_state()
             self.get_stu_data()
-            self.message_timer.start(3000)
+            self.message_timer.start(self.delay_time)
 
     def clear_user_hint(self):
         self.user_hint_label.setText("")
+        self.enable_flag = True
+        self.name_combo_box.setEnabled(True and self.enable_flag)
         self.message_timer.stop()
 
     def load(self):
