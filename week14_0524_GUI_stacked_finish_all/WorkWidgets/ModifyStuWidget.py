@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets, QtGui
+from PyQt6 import QtWidgets, QtGui, QtCore
 from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent, ComboBoxComponent
 from SocketClient.ServiceController import ExecuteCommand
 import json
@@ -65,6 +65,9 @@ class ModifyStuWidget(QtWidgets.QWidget):
 
         self.setLayout(layout)
 
+        self.message_timer = QtCore.QTimer()
+        self.message_timer.timeout.connect(self.clear_user_hint)
+
     def paintEvent(self, event):
         painter = QtGui.QPainter(self)
         painter.drawPixmap(self.rect(), self.background_pixmap)
@@ -97,10 +100,10 @@ class ModifyStuWidget(QtWidgets.QWidget):
             self.name_combo_box.clear()
             self.name_combo_box.addItems(self.name_list)
             self.name_combo_box.setEnabled(True)
-            self.user_hint_label.setText("")
         else:
             self.name_combo_box.setEnabled(False)
-            self.user_hint_label.setText("No student data, please go to Add.")
+            if not self.user_hint_label.text():
+                self.user_hint_label.setText("No student data, please go to Add.")
 
     def select_stu(self, value):
         if value in self.parameters.keys():
@@ -151,8 +154,15 @@ class ModifyStuWidget(QtWidgets.QWidget):
             else:
                 self.user_hint_label.setText('Add ' + print_str)
             self.initial_state()
+            self.get_stu_data()
+            self.message_timer.start(3000)
+
+    def clear_user_hint(self):
+        self.user_hint_label.setText("")
+        self.message_timer.stop()
 
     def load(self):
         print('Modify widget')
         self.initial_state()
+        self.user_hint_label.setText("")
         self.get_stu_data()
