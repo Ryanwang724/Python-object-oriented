@@ -1,0 +1,16 @@
+[VIP]
+Peter buys Book: $13104, Computer: $16086, Mouse: $21455, Notebook: $15029, Paper: $17756
+John buys Book: $24152, Computer: $15977, Mouse: $17932, Notebook: $9832, Paper: $18967
+Sue buys Book: $18484, Computer: $9825, Mouse: $12390, Notebook: $18273, Paper: $12721
+
+[Member]
+Hella buys Book: $14369, Computer: $16823, Mouse: $16459, Notebook: $9135, Paper: $19307
+Lee buys Book: $16367, Computer: $12186, Mouse: $10805, Notebook: $17091, Paper: $16495
+Bob buys Book: $20040, Computer: $19438, Mouse: $17886, Notebook: $19159, Paper: $15478
+Alice buys Book: $15421, Computer: $9212, Mouse: $8696, Notebook: $13912, Paper: $16689
+
+Total Book sales: $121937
+Total Computer sales: $99547
+Total Mouse sales: $105623
+Total Notebook sales: $102431
+Total Paper sales: $117413
